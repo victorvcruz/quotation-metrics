@@ -32,7 +32,7 @@ func (r *repository) BatchInsertTrade(ctx context.Context, trades []*Trade) erro
 		valueStrings[i] = fmt.Sprintf("($%d, $%d, $%d, $%d, $%d)", i*5+1, i*5+2, i*5+3, i*5+4, i*5+5)
 		valueArgs = append(valueArgs, trade.InstrumentCode, trade.TradePrice, trade.TradeQuantity, trade.CloseTime, trade.TradeDate)
 	}
-	stmt := fmt.Sprintf("INSERT INTO trade (instrument_code, trade_price, trade_quantity, close_time, trade_date) VALUES %s",
+	stmt := fmt.Sprintf("INSERT INTO trades (instrument_code, trade_price, trade_quantity, close_time, trade_date) VALUES %s",
 		strings.Join(valueStrings, ","))
 	tx, err := r.db.Begin()
 	if err != nil {

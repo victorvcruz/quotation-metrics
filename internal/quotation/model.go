@@ -6,7 +6,7 @@ import (
 )
 
 type Trade struct {
-	ID             int             `json:"id"`
+	ID             int             `json:"-"`
 	InstrumentCode string          `json:"instrument_code"`
 	TradePrice     decimal.Decimal `json:"trade_price"`
 	TradeQuantity  int             `json:"trade_quantity"`
@@ -15,7 +15,7 @@ type Trade struct {
 }
 
 type Metric struct {
-	ID             int             `json:"id"`
+	ID             int             `json:"-"`
 	Ticker         string          `json:"ticker"`
 	MaxRangeValue  decimal.Decimal `json:"max_range_value"`
 	MaxDailyVolume int             `json:"max_daily_volume"`

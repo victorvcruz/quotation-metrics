@@ -40,7 +40,7 @@ func main() {
 
 	quotationRepository := quotation.NewRepository(db)
 
-	quotationService := quotation.NewService(quotationRepository)
+	quotationService := quotation.NewService(quotationRepository, cfg)
 
 	quotationHandler := handlers.NewQuotation(quotationService)
 

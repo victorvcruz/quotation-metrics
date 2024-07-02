@@ -21,7 +21,7 @@ type Service interface {
 
 type service struct {
 	repository Repository
-	cfg        config.Config
+	cfg        *config.Config
 }
 
 // Metrics returns the metrics for a given ticker and date
@@ -41,13 +41,10 @@ func (s *service) Metrics(ctx context.Context, ticker string, date time.Time) (*
 // BatchInsert reads the csv file from the buffer and inserts the trades into the database
 // It also calculates the metrics for the trades and inserts them into the database
 func (s *service) BatchInsert(ctx context.Context, reader io.Reader) error {
-
 	tradeCh := make(chan []*Trade)
 	doneCh := make(chan error)
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
-
-	start := time.Now()
 
 	// set workers to process the trades
 	for i := 0; i < s.cfg.App.Workers; i++ {
@@ -74,12 +71,13 @@ func (s *service) BatchInsert(ctx context.Context, reader io.Reader) error {
 		return err
 	}
 
-	log.Printf("end batch insert, total trade %d, elapsed time %s\n", len(metrics), time.Since(start))
-
 	return nil
 }
 
 func (s *service) processCSV(reader io.Reader, tradeCh chan []*Trade, ctx context.Context) (map[string]*Metric, error) {
+
+	start := time.Now()
+
 	csvReader := csv.NewReader(reader)
 	csvReader.Comma = ';'
 
@@ -134,6 +132,8 @@ func (s *service) processCSV(reader io.Reader, tradeCh chan []*Trade, ctx contex
 			return nil, ctx.Err()
 		}
 	}
+
+	log.Printf("end process CSV, total trades %d, total metrics %d elapsed time %s\n", lineNum, len(metrics), time.Since(start))
 
 	return metrics, nil
 }
@@ -191,8 +191,9 @@ func (s *service) worker(ctx context.Context, tradeCh chan []*Trade, doneCh chan
 	doneCh <- nil
 }
 
-func NewService(repository Repository) Service {
+func NewService(repository Repository, cfg *config.Config) Service {
 	return &service{
 		repository: repository,
+		cfg:        cfg,
 	}
 }

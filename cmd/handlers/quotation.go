@@ -39,6 +39,7 @@ func (q *Quotation) GetMetrics(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(marshal)
 }
@@ -49,10 +50,10 @@ func (q *Quotation) BatchUpload(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to get file", http.StatusBadRequest)
 		return
 	}
-	defer file.Close()
 
 	// background process
 	go func() {
+		defer file.Close()
 		err = q.service.BatchInsert(context.Background(), file)
 		if err != nil {
 			switch err {

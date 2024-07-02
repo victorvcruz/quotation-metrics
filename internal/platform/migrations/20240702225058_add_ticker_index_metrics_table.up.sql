@@ -1,0 +1,1 @@
+CREATE INDEX ticker_index ON metrics(ticker)
