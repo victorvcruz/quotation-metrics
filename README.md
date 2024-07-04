@@ -2,7 +2,11 @@
   <a href="https://github.com/victorvcruz/quotation-metrics/actions/workflows/test.yml">
     <img src="https://github.com/victorvcruz/quotation-metrics/actions/workflows/test.yml/badge.svg" alt="CI">
   </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
+  </a>
 </p>
+
 
 # Quotation Metrics
 
