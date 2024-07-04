@@ -16,7 +16,7 @@ The service will be exposed at http://localhost:8080.
 
 - **POST `/upload` Endpoint**: Upload a CSV file in the form-data field named "Quotation".
 - **GET `/metrics` Endpoint**: Retrieve metrics with the required query parameter "ticker" and optional "date".
-
+<br><br><br>
 ## For Developers
 
 ### Environment Configuration
