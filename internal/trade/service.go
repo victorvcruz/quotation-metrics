@@ -1,4 +1,4 @@
-package quotation
+package trade
 
 import (
 	"context"
@@ -49,6 +49,11 @@ func (s *service) BatchInsert(ctx context.Context, reader io.Reader) error {
 	// set workers to process the trades
 	for i := 0; i < s.cfg.App.Workers; i++ {
 		go s.worker(ctx, tradeCh, doneCh)
+		go func() {
+			if err := <-doneCh; err != nil {
+				cancel()
+			}
+		}()
 	}
 
 	// process the csv file and send the trades to the workers
@@ -57,15 +62,7 @@ func (s *service) BatchInsert(ctx context.Context, reader io.Reader) error {
 		return err
 	}
 
-	// close the trade channel
-	// wait for the workers to finish
 	close(tradeCh)
-	for i := 0; i < s.cfg.App.Workers; i++ {
-		if err = <-doneCh; err != nil {
-			return err
-		}
-	}
-
 	err = s.repository.BatchInsertMetrics(ctx, metrics)
 	if err != nil {
 		return err
@@ -133,7 +130,7 @@ func (s *service) processCSV(reader io.Reader, tradeCh chan []*Trade, ctx contex
 		}
 	}
 
-	log.Printf("end process CSV, total trades %d, total metrics %d elapsed time %s\n", lineNum, len(metrics), time.Since(start))
+	log.Printf("end process CSV, total trades %d, total metrics %d elapsed time %s\n", lineNum-1, len(metrics), time.Since(start))
 
 	return metrics, nil
 }
@@ -141,17 +138,17 @@ func (s *service) processCSV(reader io.Reader, tradeCh chan []*Trade, ctx contex
 func (s *service) parseRecord(record []string) (*Trade, error) {
 	tradePrice, err := decimal.NewFromString(strings.Replace(record[3], ",", ".", 1))
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse trade price: %w", err)
+		return nil, fmt.Errorf("failed to parse trade price: %v", err)
 	}
 
 	tradeQuantity, err := strconv.Atoi(record[4])
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse trade quantity: %w", err)
+		return nil, fmt.Errorf("failed to parse trade quantity: %v", err)
 	}
 
 	tradeDate, err := time.Parse("2006-01-02", record[8])
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse trade date: %w", err)
+		return nil, fmt.Errorf("failed to parse trade date: %v", err)
 	}
 
 	return &Trade{

@@ -1,4 +1,4 @@
-package quotation
+package trade
 
 import (
 	"context"
@@ -87,14 +87,20 @@ func (r *repository) GetMetrics(ctx context.Context, ticker string, date time.Ti
 		FROM 
 			metrics m
 		WHERE 
-			m.ticker = $1 AND
-			m.trade_date >= $2
-		GROUP BY 
-			m.ticker;
+			m.ticker = $1
 	`
 
+	args := []interface{}{ticker}
+
+	if !date.IsZero() {
+		query += ` AND m.trade_date >= $2 `
+		args = append(args, date)
+	}
+
+	query += ` GROUP BY m.ticker; `
+
 	var data Metric
-	err := r.db.QueryRowContext(ctx, query, ticker, date).Scan(
+	err := r.db.QueryRowContext(ctx, query, args...).Scan(
 		&data.Ticker, &data.MaxRangeValue, &data.MaxDailyVolume,
 	)
 	if err != nil {

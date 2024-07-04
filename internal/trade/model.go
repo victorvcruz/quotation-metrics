@@ -1,4 +1,4 @@
-package quotation
+package trade
 
 import (
 	"github.com/shopspring/decimal"

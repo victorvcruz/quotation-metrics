@@ -9,7 +9,6 @@ import (
 )
 
 func TestLoad(t *testing.T) {
-
 	cases := []struct {
 		name     string
 		mockFunc func()
@@ -98,7 +97,7 @@ func TestLoad(t *testing.T) {
 			cfg, err := Load()
 
 			assert.Equal(t, err, tc.err)
-			assert.EqualExportedValuesf(t, cfg, tc.want, "")
+			assert.EqualExportedValues(t, cfg, tc.want)
 		})
 	}
 }

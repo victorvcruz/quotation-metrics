@@ -9,7 +9,7 @@ import (
 	"quotation-metrics/cmd/handlers"
 	"quotation-metrics/internal/config"
 	"quotation-metrics/internal/platform"
-	"quotation-metrics/internal/quotation"
+	"quotation-metrics/internal/trade"
 )
 
 func init() {
@@ -38,9 +38,9 @@ func main() {
 		log.Fatalf("failed to run migrations %v", err)
 	}
 
-	quotationRepository := quotation.NewRepository(db)
+	quotationRepository := trade.NewRepository(db)
 
-	quotationService := quotation.NewService(quotationRepository, cfg)
+	quotationService := trade.NewService(quotationRepository, cfg)
 
 	quotationHandler := handlers.NewQuotation(quotationService)
 
