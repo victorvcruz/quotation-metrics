@@ -58,7 +58,7 @@ func (q *Quotation) BatchUpload(w http.ResponseWriter, r *http.Request) {
 	// background process
 	go func() {
 		defer file.Close()
-		err = q.service.BatchInsert(context.Background(), file)
+		err := q.service.BatchInsert(context.Background(), file)
 		if err != nil {
 			switch err {
 			default:

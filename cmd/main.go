@@ -47,8 +47,8 @@ func main() {
 	r.Post("/upload", quotationHandler.BatchUpload)
 	r.Get("/metrics", quotationHandler.GetMetrics)
 
+	log.Println("server started on port 8080")
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		log.Fatalln("failed to start server on port 8080")
 	}
-	log.Println("server started on port 8080")
 }

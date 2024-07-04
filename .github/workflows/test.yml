@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+  pull_request_target:
+  merge_group:
+    branches: [main]
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    name: Unit Tests
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v4
+
+      - name: Set up Go 1.21
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22
+
+      - name: Run Tests
+        run: |
+          go mod download         
+          go test -p 1 -count=1 ./...
