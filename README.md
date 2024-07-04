@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://github.com/victorvcruz/quotation-metrics/actions/workflows/test.yml">
+    <img src="https://github.com/victorvcruz/quotation-metrics/actions/workflows/test.yml/badge.svg" alt="CI">
+  </a>
+</p>
+
 # Quotation Metrics
 
 ## What is it?
