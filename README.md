@@ -30,7 +30,7 @@ The service will be exposed at http://localhost:8080.
     ```bash
     sudo docker compose up -d
     ```
-2. Navigate to the root folder of the directory and execute:
+2. Navigate to the root folder of the project and execute:
     ```bash
     cd ./cmd && go build -o ../app && cd .. && ./app
     ```
