@@ -48,10 +48,6 @@ func (r *repository) BatchInsertTrade(ctx context.Context, trades []*Trade) erro
 }
 
 func (r *repository) BatchInsertMetrics(ctx context.Context, metricsMap map[string]*Metric) error {
-	tx, err := r.db.Begin()
-	if err != nil {
-		return err
-	}
 
 	valueStrings := make([]string, 0, len(metricsMap))
 	valueArgs := make([]interface{}, 0, len(metricsMap)*4)
@@ -61,6 +57,11 @@ func (r *repository) BatchInsertMetrics(ctx context.Context, metricsMap map[stri
 		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d, $%d, $%d)", argCounter, argCounter+1, argCounter+2, argCounter+3))
 		valueArgs = append(valueArgs, ticker, metrics.MaxRangeValue, metrics.MaxDailyVolume, metrics.TradeDate)
 		argCounter += 4
+	}
+
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
 	}
 
 	stmt := fmt.Sprintf("INSERT INTO metrics (ticker, max_range_value, max_daily_volume, trade_date) VALUES %s", strings.Join(valueStrings, ","))
