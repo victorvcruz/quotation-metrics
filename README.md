@@ -10,6 +10,11 @@
 
 # Quotation Metrics
 
+## Architecture
+<p align="center">
+  <img src="docs/images/quotation-metrics.png" height="440">
+</p>
+
 ## What is it?
 
 Quotation Metrics is a metric analysis tool designed to process a large volume of quotation data from the B3 bank delivered in multiple CSV files. It provides an efficient way to analyze and store trade metrics.
